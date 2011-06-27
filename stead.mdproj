@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Default</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ItemType>GenericProject</ItemType>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3F3F4F20-F702-49A3-AF91-A24D9EFD0944}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Default|AnyCPU' ">
+    <OutputPath>.</OutputPath>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="Execute" command="love src" workingdir="${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="src\conf.lua" />
+    <None Include="src\COPYRIGHT" />
+    <None Include="src\graphics.lua" />
+    <None Include="src\main.lua" />
+    <None Include="src\math.lua" />
+    <None Include="src\util.lua" />
+    <None Include="src\screen.lua" />
+    <None Include="src\world.lua" />
+    <None Include="src\actor.lua" />
+    <None Include="src\button.lua" />
+    <None Include="src\ninepatch.lua" />
+  </ItemGroup>
+</Project>
