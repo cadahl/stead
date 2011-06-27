@@ -28,7 +28,7 @@ local function nextUid()
 	return uid
 end
 
-function Actor.new(t)
+function StateMachine.new(t)
 	local self = 
 	{
 		uid = nextUid(),
@@ -39,6 +39,7 @@ function Actor.new(t)
 
 	local properties = 
 	{ 
+		bounds = { value = { 0, 0, 0, 0 }, onSet = nil },
 		drawPriority = { value = 0, onSet = world.setDrawListDirty },
 		updatePriority = { value = 0, onSet = world.setUpdateListDirty }
 	}
