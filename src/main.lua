@@ -28,6 +28,7 @@ require "graphics.lua"
 require "actor.lua"
 require "screen.lua"
 require "world.lua"
+require "widget.lua"
 require "button.lua"
 
 keysPressed = 0

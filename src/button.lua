@@ -25,19 +25,13 @@ local lg = love.graphics
 Button = {
 	btn_default = {
 		inner = { 8,4,8,12 },
-		margins = { 6,2,6,9 }
+		margins = { 6,2,6,9 },
 		images = {
-			normal = lg.newImage("img/drawable-hdpi/btn_default_normal.9.png"),
-			pressed = lg.newImage("img/drawable-hdpi/btn_default_normal.9.png")
+			normal = "btn_default_normal.9.png",
+			pressed = "btn_default_pressed.9.png"
 		}			
 	}
-	btn_default = {
-		inner = { 8,4,8,12 },
-		margins = { 6,2,6,9 }
-	}
 }
-
-img:setWrap("repeat", "repeat")
 
 function Button.new(x,y,width,height)
 	local s = Actor.new("Button")
@@ -71,7 +65,7 @@ function Button.new(x,y,width,height)
 	s.drawPriority = 100
 	s.updatePriority = 10
 
-	drawButtonImage = util.ninepatch(img, Button.btn_default)
+	drawButtonImage = widget.ninepatch(Button.btn_default, "normal")
 
 	return s
 end

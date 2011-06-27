@@ -3,7 +3,7 @@
 LOVEVERSION=0.7.0
 
 GVERSION=`date +%F`
-GNAME="gembobble"
+GNAME="stead"
 GNAME_LINUX=${GNAME}"-linux"
 LOVEDISTPATH=${PWD}/lovedist
 SRCPATH=${PWD}/src
