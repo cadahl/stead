@@ -1,6 +1,6 @@
 --[[
-Gemböbble
-Copyright (c) 2010-2011 Carl Ådahl
+Stead
+Copyright (c) 2011 Carl Ådahl
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,61 +20,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]
-Actor = {}
+StateMachine = {}
 
-local uid = 0
-local function nextUid()
-	uid = uid + 1
-	return uid
-end
+function StateMachine.init(self)
 
-function Actor.new(t)
-	local self = 
-	{
-		uid = nextUid(),
-		type = t,
-		dt = 0,
-		states = {}
-	}
+	self = self or {}
+	self.dt = 0
+	self.states = {}
 
-	local properties = 
-	{ 
+	PropertyBag.init(self, { 
 		drawPriority = { value = 0, onSet = world.setDrawListDirty },
 		updatePriority = { value = 0, onSet = world.setUpdateListDirty }
-	}
-
-	setmetatable(self, 
-	{
-		__newindex = function(tbl, key, val)
-			local property = properties[key]
-			if property then
-				local oldValue = property.value
-				property.value = val
-				property.onSet(oldValue, val)
-			else
-				rawset(tbl, key, val)
-			end
-		end,
-	
-		__index = function(tbl, key)
-			local property = properties[key]
-			if property then
-				return property.value
-			else
-				return rawget(tbl, key)
-			end
-		end
 	})
-
-	-- Attach another actor to this one, making it stay positioned the same, relatively.
-	-- Optionally supply an x,y offset that will be maintained.
-	function self.attachTo(parent, offsetx, offsety)
-		self.getRect = function()
-							local px,py,pw,ph = parent.getRect()
-							return px + (offsetx or 0), py + (offsety or 0), pw, ph
-					   end
-		return self
-	end
 
 	-- doFor(time, func, ...)	
 	--	Repeat the specified function every frame for a certain amount of time.	

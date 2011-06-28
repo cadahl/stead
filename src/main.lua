@@ -25,11 +25,11 @@ require "conf.lua"
 require "util.lua"
 require "math.lua"
 require "graphics.lua"
-require "actor.lua"
+require "widget.lua"
 require "screen.lua"
 require "world.lua"
-require "widget.lua"
 require "button.lua"
+require "propertybag.lua"
 
 keysPressed = 0
 

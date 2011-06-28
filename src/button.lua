@@ -23,49 +23,52 @@ THE SOFTWARE.
 local lg = love.graphics
 
 Button = {
-	btn_default = {
-		inner = { 8,4,8,12 },
-		margins = { 6,2,6,9 },
-		images = {
-			normal = "btn_default_normal.9.png",
-			pressed = "btn_default_pressed.9.png"
-		}			
+	styles = {
+		default = {
+			innerMargin = { 8,4,8,12 },
+			gutterMargin = { 6,2,6,9 },
+			states = {
+				normal 	= { image = "img/drawable-hdpi/btn_default_normal.9.png" },
+				pressed = { image = "img/drawable-hdpi/btn_default_pressed.9.png" }
+			}			
+		}
 	}
 }
 
-function Button.new(x,y,width,height)
-	local s = Actor.new("Button")
+local function loadStyle(name)
 
-	local drawButtonImage
+	local style = Button.styles[name]
 
-	function s.getRect()
-		return x,y,width,height
+	for i,v in pairs(style.states)
+		if type(v) == "string" then
+			style.states[i] = lg.newImage(v)
+		end
 	end
 
-	function s.setRect(x_,y_,w_,h_)
-		x,y,width,height = x_, y_, w_ or width, h_ or height
-	end
+	return style
+end
+
+function Button.new(t, bounds)
+	local s = Widget.init({}, "Button", bounds)
+	s.style = loadStyle("default")
+	s.drawPriority = 100
+	s.updatePriority = 10
+
+	local buttonState = "normal"
+	local drawButton = Widget.createNinePatch(s.style[buttonState].image, s.style.innerMargin, s.style.gutterMargin)
 
 	function s.draw()
 		lg.pushMaterial()
 		lg.setBlendMode("alpha")
 		lg.setColor(255,255,255,255)
 
-		if drawButtonImage then
-			drawButtonImage.draw(x,y,width,height)
+		if drawButton then
+			drawButton(s.bounds)
 		end		
 		
 		lg.popMaterial()
 	end
 
-	function s.states.standby()
-		s.wait()
-	end
-
-	s.drawPriority = 100
-	s.updatePriority = 10
-
-	drawButtonImage = widget.ninepatch(Button.btn_default, "normal")
-
 	return s
 end
+

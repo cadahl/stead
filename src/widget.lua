@@ -1,75 +1,77 @@
 --[[
 Stead
-Copyright (c) 2011 Carl Ådahl
+Codyright (c) 2011 Carl Ådahl
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+Permission is hereby granted, free of charge, to any person obtaining a cody
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+to use, cody, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in
+The above codyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+AUTHORS OR COdyRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]
-widget = {}
+Widget = {}
 
-local lg = love.graphics
-
-local function expandOuter(x,y,w,h,outer)
-			return 	x - outer[1],
-							y - outer[2],
-							w + outer[1] + outer[3],
-							h + outer[2] + outer[4]
+function Widget.init(self, t, bounds)
+	self = self or {}
+	self.uid = uid()
+	self.type = t
+	self.bounds = { 0, 0, 0, 0 }
 end
 
-local function ninePatchPositions(x,y,w,h,inner)
-	return { x, x + inner[1], x + w - inner[3] },
-				 { y, y + inner[2], y + h - inner[4] }
+-- Expand bounds according to margins.
+-- 		bounds:			Input bounds 		{ x, y, z, w }
+-- 		margin:			Input margins 	{ l, t, r, b }
+-- 		returns: 		Expanded bounds { x, y, z, w }
+--
+local function expandBounds(bounds, margin)
+	local x, y, w, h = unpack(bounds)
+	local lm, tm, rm, bm = unpack(margin)
+	return 	{	x - lm, y - tm, w + lm + rm, h + tm + bm }
 end
 
-local function ninePatchSizes(w,h,inner)
-	return 	{ inner[1], w-inner[3]-inner[1], inner[3] },
-					{ inner[2], h-inner[4]-inner[2], inner[4] }
+-- Generate 9-patch coordinates from given bounds and margins.
+-- 		returns:	Patch coordinates 	{ x1, x2, x3 },
+-- 																	{ y1, y2, y3 },
+-- 																	{ w1, w2, w3 },
+-- 																	{ h1, h2, h3 }
+--
+local function ninePatch(bounds, margin)
+	local x, y, w, h = unpack(bounds)
+	local lm, tm, rm, bm = unpack(margin)
+	return 	{ x, x + lm, x + w - rm },
+					{ y, y + tm, y + h - bm },
+					{ lm, w - rm - lm, rm },
+					{ tm, h - bm - tm, bm }
 end
 
--- inner		LTRB margins to inner rectangle (repeated part inside draw rect).
--- margins	LTRB margins of outer rectangle (outside draw rect).
-function widget.ninepatch(widgetConfig, state)
-	local lg = love.graphics
-	local img = lg.newImage("img/drawable-hdpi/" .. widgetConfig.images[state])
-	local sw = img:getWidth()
-	local sh = img:getHeight()
-	local inner = widgetConfig.inner
-	local outer = widgetConfig.margins
-
-	local sxs,sys = ninePatchPositions(0,0,sw,sh,inner)
-	local sws,shs = ninePatchSizes(sw,sh,inner)
+-- Creates a 9-patch from the given  
+--
+--
+function Widget.createNinePatch(image, innerMargin, gutterMargin)
+	local sx,sy,sw,sh = ninePatch({ 0, 0, image:getWidth(), image:getHeight() }, innerMargin)
 	
-	return {
-		draw = function(dx,dy,dw,dh)
-		
-			dx,dy,dw,dh = expandOuter(dx,dy,dw,dh,outer)
+	return function(drawBounds)
+		local dx,dy,dw,dh = ninePatch(expandBounds(drawBounds, gutterMargin), innerMargin)
 
-			local dxs,dys = ninePatchPositions(dx,dy,dw,dh,inner)
-			local dws,dhs = ninePatchSizes(dw,dh,inner)
-
-			for j=1,3 do
-				for i=1,3 do
-					local scalex = i == 2 and dws[i]/sws[i] or 1
-					local scaley = j == 2 and dhs[j]/shs[j] or 1
-					lg.drawq(img, lg.newQuad(sxs[i], sys[j], sws[i], shs[j], sw, sh), dxs[i], dys[j], 0, scalex, scaley)
-				end
+		for j=1,3 do
+			for i=1,3 do
+				local scalex = i == 2 and dw[i]/sw[i] or 1
+				local scaley = j == 2 and dh[j]/sh[j] or 1
+				lg.drawq(img, love.graphics.newQuad(sx[i], sy[j], sw[i], sh[j], imgWidth, imgHeight), dx[i], dy[j], 0, scalex, scaley)
 			end
 		end
-	}
+	end
 end
+
 

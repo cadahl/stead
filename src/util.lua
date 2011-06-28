@@ -31,4 +31,13 @@ function util.sequence(...)
 	end
 end
 
+local uidGenerator = function()
+	local uid = 0
+	return function()
+		uid = uid + 1
+		return uid
+	end
+end
+
+util.uid = uidGenerator()
 
