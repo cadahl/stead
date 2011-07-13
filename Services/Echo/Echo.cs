@@ -39,7 +39,7 @@ namespace Stead.Services
   {
     public static void Main(string[] args)
     {
-      string broker = args.Count > 0 ? args[0] : "tcp://localhost:5555";
+      string broker = args.Length > 0 ? args[0] : "tcp://localhost:5555";
 
       using(WorkerSession session = new WorkerSession(broker, "echo", false))
       {
