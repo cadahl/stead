@@ -4,26 +4,26 @@ using Stead;
 
 namespace Stead.Services
 {
-  public class EchoService
-  {
-    public static void Main(string[] args)
+    public class EchoService
     {
-      string broker = args.Length > 0 ? args[0] : "tcp://localhost:5555";
-
-      using(WorkerSession session = new WorkerSession(broker, "echo", false))
-      {
-        IntPtr reply = IntPtr.Zero;
-        
-        while(true) 
+        public static void Main(string[] args)
         {
-          IntPtr request = session.Receive(ref reply);
+            string broker = args.Length > 0 ? args[0] : "tcp://localhost:5555";
 
-          if(request == IntPtr.Zero)
-            break;
+            using (WorkerSession session = new WorkerSession(broker, "echo", false))
+            {
+                IntPtr reply = IntPtr.Zero;
 
-          reply = request;
+                while (true)
+                {
+                    IntPtr request = session.Receive(ref reply);
+
+                    if (request == IntPtr.Zero)
+                        break;
+
+                    reply = request;
+                }
+            }
         }
-      }
     }
-  }
 }
