@@ -1,0 +1,6 @@
+syntax: glob
+**.suo
+**.vshost.exe
+**.vshost.exe.manifest
+*/Release/
+*/Debug/
