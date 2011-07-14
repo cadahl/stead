@@ -16,13 +16,20 @@ namespace TestSkanetrafiken
             string ns = @"{http://www.etis.fskab.se/v1.0/ETISws}";
             string query = @"http://www.labs.skanetrafiken.se/v2.2/resultspage.asp?cmdaction=next&selPointFr=malm%F6%20C|80000|0&selPointTo=hassleholm%20C|93070|0&LastStart=" + Uri.EscapeUriString(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
             Console.WriteLine(query);
-
+             
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            WebClient wc = new WebClient();
-            wc.Proxy = null;
-            XDocument doc = XDocument.Load(wc.OpenRead(query));
+            WebRequest wr = WebRequest.Create(query);
+            wr.Proxy = null;
+            WebResponse response = wr.GetResponse();
+            if(response == null)
+            {
+                Console.WriteLine("No response.");
+                return;
+            }
+
+            XDocument doc = XDocument.Load(response.GetResponseStream());
             var journeys = doc.Descendants(ns + "Journey");
 
             if (journeys.FirstOrDefault() == null)
