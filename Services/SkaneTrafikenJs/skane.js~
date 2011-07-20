@@ -1,0 +1,10 @@
+require('./underscore-min.js');
+var http = require('http');
+
+var serverFunc = function(req,res) {
+  res.writeHead(200);
+  res.end('Hellooo');
+}
+
+http.createServer(serverFunc).listen(8080);
+    
